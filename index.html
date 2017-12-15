@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Offline</title>
+  <link rel="stylesheet" href="./style.css">
+  <script type="text/javascript" src="./script.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js', { scope: './' }).then(function(reg) {
+        if(reg.installing) {
+          console.log('Service worker installing');
+        } else if(reg.waiting) {
+          console.log('Service worker installed');
+        } else if(reg.active) {
+          console.log('Service worker active');
+        } else {
+          console.log('Unknow status')
+        }
+        // registration worked
+        console.log('Registration succeeded. Scope is ' + reg.scope);
+
+      }).catch(function(error) {
+        // registration failed
+        console.log('Registration failed with ' + error);
+      });
+    }
+  </script>
+</head>
+<body>
+  <div>service worker</div>
+  <img src="./google_logo.png" alt="">
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "demo-offline",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "http-server -c no-cache -p 8989"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
