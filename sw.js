@@ -1,6 +1,9 @@
 var VERSION = 'v1';
 
+console.log('loaded sw.js');
+
 self.addEventListener('install', function(event) {
+  console.log('~~~~~~ event install ~~~~~~');
   event.waitUntil(
     caches.open(VERSION).then(function(cache) {
       return cache.addAll([
@@ -13,13 +16,13 @@ self.addEventListener('install', function(event) {
 });
 
 this.addEventListener('activate', function(event) {
+  console.log('~~~~~~ event activate ~~~~~~');
   var cacheWhitelist = [VERSION];
-
   event.waitUntil(
     caches.keys().then(function(cacheNames) {
       return Promise.all(cacheNames.map(function(cacheName) {
-        if (cacheWhitelist.indexOf(cacheName) === -1) {
-          // console.log('Deleting out of date cache:', cacheName);
+        if (!cacheWhitelist.includes(cacheName)) {
+          console.log('%cDeleting out of date cache:', cacheName, 'color:green');
           return caches.delete(cacheName);
         }
       }));
@@ -28,14 +31,15 @@ this.addEventListener('activate', function(event) {
 });
 
 self.addEventListener('fetch', function(event) {
-  console.log('Request url: ', event.request.url); // Request Intercept
+  console.log('~~~~~~ event fetch ~~~~~~');
+  console.log('%cRequest url: ', 'color: purple', event.request.url); // Request Intercept
   // 劫持 HTTP 响应
   event.respondWith(caches.match(event.request).then(function(response) {
     if (response !== undefined) {
-      console.log('Response local asset: ', event.request.url); // Cache Storage
+      console.log('%cResponse local asset: ', 'color:green', event.request.url); // Cache Storage
       return response;
     } else {
-      console.log('Response remote asset: ', event.request.url); // Remote Server
+      console.log('%cResponse remote asset: ', 'color:blue', event.request.url); // Remote Server
       return fetch(event.request).then(function (response) {
         // 请求网络资源后, 保存到缓存中, 以便将来离线使用.
         caches.open(VERSION).then(function (cache) {
@@ -45,7 +49,7 @@ self.addEventListener('fetch', function(event) {
       })
     }
   }).catch(function() {
-    console.log('Response match error');
+    console.log('%cResponse match error', 'color:red');
   }));
 });
 
