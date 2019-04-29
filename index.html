@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Offline</title>
+  <link rel="shortcut icon" href="./favicon.ico"/>
   <link rel="stylesheet" href="./style.css">
   <script>
     if ('serviceWorker' in navigator) {
@@ -9,7 +10,7 @@
         if(reg.installing) {
           console.log('%cService worker installing', 'color:green');
         } else if(reg.waiting) {
-          console.log('%cService worker installed', 'color:green');
+          console.log('%cService worker waiting', 'color:green');
         } else if(reg.active) {
           console.log('%cService worker active', 'color:green');
         } else {
@@ -23,11 +24,18 @@
         console.log('%cService worker registration failed with ' + error, 'color:red');
       });
     }
+    // 远程访问数据也会缓存
+    fetch('https://api.github.com/users/adntin')
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(json) {
+      document.body.append(JSON.stringify(json));
+    });
   </script>
 </head>
 <body>
-  <div>service worker</div>
-  <img src="./google_logo.png" alt="">
+  <img src="./google_logo.png" />
   <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
   <script type="text/javascript" src="./script.js"></script>
 </body>
