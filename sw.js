@@ -8,10 +8,12 @@ var VERSION = 'v1';
 self.addEventListener('install', function(event) {
   console.log('~~~~~~ install event ~~~~~~');
   // event.waitUntil() 方法带有 promise 参数并使用它来判断安装所花费的时间，以及安装是否成功。
-  //console.log(1);
+  // console.log(1);
+  // 尽快将新 Service Worker 激活, 会存在多版本, 不建议使用!!!
+  // self.skipWaiting();
   event.waitUntil(
     caches.open(VERSION).then(function(cache) {
-      //console.log(3);
+      // console.log(3);
       return cache.addAll([
         './',
         './index.html',
@@ -22,7 +24,7 @@ self.addEventListener('install', function(event) {
       console.error('Service worker install event error.');
     })
   );
-  //console.log(2)
+  // console.log(2)
 });
 
 // 1. 更新您的服务工作线程 sw.js 文件。 用户导航至您的站点时，浏览器会尝试在后台重新下载定义 Service Worker 的脚本文件。 
@@ -38,7 +40,7 @@ this.addEventListener('activate', function(event) {
     caches.keys().then(function(cacheNames) {
       return Promise.all(cacheNames.map(function(cacheName) {
         if (cacheWhitelist.indexOf(cacheName) === -1) {
-          console.log('%cDeleting out of date cache:', cacheName, 'color:green');
+          console.log(`%cDeleting out of date cache: ${cacheName}`, 'color:green');
           return caches.delete(cacheName);
         }
       }));
@@ -83,6 +85,12 @@ self.addEventListener('fetch', function(event) {
       console.error('Service worker fetch event error.');
     })
   );
+});
+
+self.addEventListener('message', event => {
+  if (event.data === 'skipWaiting') {
+    self.skipWaiting();
+  }
 });
 
 // 无返回值
