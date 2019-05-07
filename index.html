@@ -32,9 +32,10 @@
                   if (navigator.serviceWorker.controller) {
                     // 注意: sw.js有更新才进入此分支.
                     console.log('有新版本, 询问是否使用最新代码!!!');
-                    setInterval(()=> {
+                    const timer = setInterval(()=> {
                       if (window.confirm('是否使用新版本(只是激活)?')) {
                         newWorker.postMessage('skipWaiting'); // 只是激活, 要刷新才会显示最新代码
+                        clearInterval(timer);
                       }
                     }, 3000);
                   } 
